@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  // Use a fixed SQLite file path so no env var is required for local dev
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  fullName  String
+  createdAt DateTime @default(now())
+  loans     LoanApplication[]
+}
+
+model LoanApplication {
+  id             Int      @id @default(autoincrement())
+  user           User     @relation(fields: [userId], references: [id])
+  userId         Int
+  principal      Float
+  tenureMonths   Int
+  income         Float
+  emi            Float
+  status         String   @default("PENDING")
+  createdAt      DateTime @default(now())
+}
+
+
